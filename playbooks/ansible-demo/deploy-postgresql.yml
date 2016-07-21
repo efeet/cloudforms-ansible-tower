@@ -1,0 +1,15 @@
+---
+# PostgreSQL deployment
+- hosts: all-servers
+  remote_user: ec2-user
+  sudo: yes
+  roles:
+    - { role: sfromm.postgresql }
+  post_tasks:
+    - name: Configure TCP/IP Client Authorizations
+      lineinfile: dest=/var/lib/pgsql/data/postgresql.conf regexp=^listen_addresses line=listen_addresses='*'
+
+    - name: Restart PostgreSQL
+      service: name=postgresql state=restarted
+
+    - set_fact: one_fact="something"

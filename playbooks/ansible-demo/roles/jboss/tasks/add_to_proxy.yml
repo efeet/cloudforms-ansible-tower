@@ -1,0 +1,28 @@
+---
+# Add node to AWS-ELB
+- hosts: all-servers
+  remote_user: ec2-user
+  sudo: yes
+  tasks:
+  - name: Register instance to AWS ELB
+    when: ec2_id is defined
+    local_action:
+      module: ec2_elb
+      ec2_region: us-west-2
+      instance_id: "{{ ec2_id }}"  # instance_id from Ansible Facts
+      ec2_elbs: "ticketmonster"
+      state: present
+      wait: yes
+      wait_timeout: 60
+    sudo: false
+
+  - name: Add host {{ inventory_hostname }} to HAProxy
+    when: ec2_id is undefined
+    lineinfile: dest=/etc/haproxy/haproxy.cfg 
+                line='    server  {{ inventory_hostname }} {{ ansible_ssh_host }}:8080 check'
+    delegate_to: rhel7-haproxy
+
+  - name: Restart HAProxy
+    when: ec2_id is undefined
+    command: systemctl restart haproxy.service
+    delegate_to: rhel7-haproxy

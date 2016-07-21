@@ -1,0 +1,14 @@
+---
+# Add node to HAProxy
+- hosts: all-servers
+  remote_user: ec2-user
+  sudo: yes
+  tasks:
+  - name: Add host {{ inventory_hostname }} to HAProxy
+    lineinfile: dest=/etc/haproxy/haproxy.cfg 
+                line='    server  {{ inventory_hostname }} {{ ansible_ssh_host }}:8080 check'
+    delegate_to: rhel7-haproxy
+
+  - name: Restart HAProxy
+    command: systemctl restart haproxy.service
+    delegate_to: rhel7-haproxy

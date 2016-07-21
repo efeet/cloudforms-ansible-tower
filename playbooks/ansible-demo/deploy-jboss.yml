@@ -1,0 +1,9 @@
+---
+# JBoss deployment
+- hosts: all-servers
+  remote_user: ec2-user
+  sudo: yes
+  roles:
+    - jboss
+
+- include: roles/jboss/tasks/add_to_proxy.yml
