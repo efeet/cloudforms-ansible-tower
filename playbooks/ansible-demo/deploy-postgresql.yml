@@ -11,5 +11,3 @@
 
     - name: Restart PostgreSQL
       service: name=postgresql state=restarted
-
-    - set_fact: one_fact="something"
