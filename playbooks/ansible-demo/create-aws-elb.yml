@@ -6,11 +6,12 @@
       ec2_elb_lb:
         name: "{{ elb_name }}"
         state: present
-        region: us-west-2
+        region: us-east-1
         zones: 
-          - us-west-2a
-          - us-west-2b
-          - us-west-2c
+          - us-east-1b
+          - us-east-1c
+          - us-east-1d
+          - us-east-1e
         purge_instance_ids: true
         listeners:
           - protocol: http # options are http, https, ssl, tcp
